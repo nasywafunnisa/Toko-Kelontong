@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 600px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        h1, h2 {
+            color: #d63031;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #4b4bc7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Laporan</h1>
+        <h2>Laporan Penjualan</h2>
+        
+        <h2>Data Pembelian</h2>
+        <table>
+            <tr>
+                <th>Nama Pelanggan</th>
+                <th>Kontak</th>
+                <th>Nama Produk</th>
+                <th>Jumlah</th>
+                <th>Jenis Transaksi</th>
+            </tr>
+            <tr>
+                <td id="laporanNamaPelanggan"></td>
+                <td id="laporanKontakPelanggan"></td>
+                <td id="laporanNamaProduk"></td>
+                <td id="laporanJumlahProduk"></td>
+                <td id="laporanJenisTransaksi"></td>
+            </tr>
+        </table>
+        
+        <h2>Stok Persediaan</h2>
+        <table>
+            <tr>
+                <th>Nama Produk</th>
+                <th>Stok Tersisa</th>
+            </tr>
+            <tr>
+                <td>Beras</td>
+                <td id="stokBeras">50</td>
+            </tr>
+            <tr>
+                <td>Gula</td>
+                <td id="stokGula">30</td>
+            </tr>
+        </table>
+        
+        <h2>Pencarian Produk</h2>
+        <input type="text" id="cariProduk" placeholder="Cari Produk">
+        <button onclick="cariProduk()">Cari</button>
+        <p id="hasilPencarian"></p>
+        
+        <h2>Laporan Faktur Jual</h2>
+        <p><strong>Nomor Faktur:</strong> <span id="nomorFaktur"></span></p>
+        <p><strong>Tanggal:</strong> <span id="tanggalFaktur"></span></p>
+        <p><strong>Total Pembayaran:</strong> Rp <span id="totalPembayaran"></span></p>
+        
+        <h2>Rekapitulasi Penjualan</h2>
+        <p><strong>Harian:</strong> Rp <span id="rekapHarian">0</span></p>
+        <p><strong>Bulanan:</strong> Rp <span id="rekapBulanan">0</span></p>
+        <p><strong>Tahunan:</strong> Rp <span id="rekapTahunan">0</span></p>
+    </div>
+
+    <script>
+        function loadData() {
+            let namaPelanggan = localStorage.getItem("namaPelanggan");
+            let kontakPelanggan = localStorage.getItem("kontakPelanggan");
+            let namaProduk = localStorage.getItem("namaProduk");
+            let jumlahProduk = parseInt(localStorage.getItem("jumlahProduk"));
+            let jenisTransaksi = localStorage.getItem("jenisTransaksi");
+    
+            if (!namaPelanggan || !namaProduk) {
+                alert("Tidak ada data transaksi terbaru.");
+                return;
+            }
+    
+            document.getElementById("laporanNamaPelanggan").innerText = namaPelanggan;
+            document.getElementById("laporanKontakPelanggan").innerText = kontakPelanggan;
+            document.getElementById("laporanNamaProduk").innerText = namaProduk;
+            document.getElementById("laporanJumlahProduk").innerText = jumlahProduk;
+            document.getElementById("laporanJenisTransaksi").innerText = jenisTransaksi;
+    
+            let hargaSatuan = (namaProduk === "Beras") ? 12000 : 15000;
+            let totalHarga = jumlahProduk * hargaSatuan;
+    
+            document.getElementById("totalPembayaran").innerText = "Rp " + totalHarga.toLocaleString();
+    
+            let stokBeras = parseInt(localStorage.getItem("stokBeras")) || 50;
+            let stokGula = parseInt(localStorage.getItem("stokGula")) || 30;
+    
+            if (namaProduk === "Beras") {
+                stokBeras -= jumlahProduk;
+                localStorage.setItem("stokBeras", stokBeras);
+            } else if (namaProduk === "Gula") {
+                stokGula -= jumlahProduk;
+                localStorage.setItem("stokGula", stokGula);
+            }
+    
+            document.getElementById("stokBeras").innerText = stokBeras;
+            document.getElementById("stokGula").innerText = stokGula;
+    
+            generateFaktur();
+        }
+    
+        function generateFaktur() {
+            let date = new Date();
+            let fakturNumber = "FK" + date.getTime();
+            document.getElementById("nomorFaktur").innerText = fakturNumber;
+            document.getElementById("tanggalFaktur").innerText = date.toLocaleDateString();
+        }
+        
+        function cariProduk() {
+            let input = document.getElementById("cariProduk").value.toLowerCase();
+            let produkList = ["beras", "gula"];
+            let hasil = produkList.includes(input) ? `Produk '${input}' tersedia` : "Produk tidak ditemukan";
+            document.getElementById("hasilPencarian").innerText = hasil;
+        }
+    
+        window.onload = loadData;
+    </script>
+</body>
+</html>

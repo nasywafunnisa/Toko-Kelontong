@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Entri Pembelian</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        h2 {
+            color: #d63031;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            color: #2d3436;
+        }
+        input, select, button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #4b4bc7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Form Entri Pembelian</h2>
+        <label>Nama Pelanggan:</label>
+        <input type="text" id="namaPelanggan" placeholder="Nama Pelanggan">
+        
+        <label>Kontak Pelanggan:</label>
+        <input type="text" id="kontakPelanggan" placeholder="Kontak">
+        
+        <label>Nama Produk:</label>
+        <select id="namaProduk">
+            <option value="Beras">Beras</option>
+            <option value="Gula">Gula</option>
+            <option value="Minyak Goreng">Minyak Goreng</option>
+            <option value="Mie Instan">Mie Instan</option>
+            <option value="Bumbu Dapur">Bumbu Dapur</option>
+            <option value="Sabun Mandi">Sabun Mandi</option>
+            <option value="Sampo">Sampo</option>
+            <option value="Pasta Gigi">Pasta Gigi</option>
+            <option value="Deterjen">Deterjen</option>
+            <option value="Sabun Cuci Piring">Sabun Cuci Piring</option>
+            <option value="Teh">Teh</option>
+            <option value="Kopi">Kopi</option>
+        </select>
+        
+        <label>Jumlah:</label>
+        <input type="number" id="jumlahProduk" placeholder="Jumlah">
+        
+        <label>Jenis Transaksi:</label>
+        <select id="jenisTransaksi">
+            <option value="Tunai">Tunai</option>
+            <option value="Non-Tunai">Non-Tunai</option>
+        </select>
+        
+        <button onclick="prosesPembelian()">Submit</button>
+    </div>
+
+    <script>
+        function prosesPembelian() {
+            let namaPelanggan = document.getElementById("namaPelanggan").value;
+            let kontakPelanggan = document.getElementById("kontakPelanggan").value;
+            let namaProduk = document.getElementById("namaProduk").value;
+            let jumlahProduk = document.getElementById("jumlahProduk").value;
+            let jenisTransaksi = document.getElementById("jenisTransaksi").value;
+    
+            if (!namaPelanggan || !kontakPelanggan || !jumlahProduk) {
+                alert("Mohon lengkapi semua data!");
+                return;
+            }
+    
+            localStorage.setItem("namaPelanggan", namaPelanggan);
+            localStorage.setItem("kontakPelanggan", kontakPelanggan);
+            localStorage.setItem("namaProduk", namaProduk);
+            localStorage.setItem("jumlahProduk", jumlahProduk);
+            localStorage.setItem("jenisTransaksi", jenisTransaksi);
+    
+            alert("Data berhasil disimpan!");
+            window.location.href = 'laporan.html'; 
+        }
+    </script>
+</body>
+</html>
